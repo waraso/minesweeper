@@ -1,0 +1,39 @@
+
+:root {
+    --square-size: 40px;
+    --row-size: 10;
+    --column-size: 10;
+}
+
+.title {
+    text-align: center;
+}
+
+#game {
+    display: grid;
+    margin: 0 auto;
+    width: fit-content;
+    height: fit-content;
+    border: 8px double black;
+    grid-template-columns: repeat(var(--column-size), var(--square-size));
+    grid-template-rows: repeat(var(--row-size), var(--square-size));
+}
+
+#game > .square {
+    border: 1px solid black;
+}
+
+.square {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: var(--square-size);
+    height: var(--square-size);
+    user-select: none;
+    background-color: gray;
+}
+
+.opened {
+    background-color: lightgray;
+}
+
