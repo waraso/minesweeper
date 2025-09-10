@@ -15,6 +15,7 @@
     width: fit-content;
     height: fit-content;
     border: 8px double black;
+    color: black;
     grid-template-columns: repeat(var(--column-size), var(--square-size));
     grid-template-rows: repeat(var(--row-size), var(--square-size));
 }
@@ -31,9 +32,15 @@
     height: var(--square-size);
     user-select: none;
     background-color: gray;
+    color: transparent;
 }
 
 .opened {
     background-color: lightgray;
+    color: inherit;
+}
+
+.flag {
+    color: inherit;
 }
 
