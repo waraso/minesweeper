@@ -28,7 +28,6 @@
         // 爆弾を設置
         randomList.forEach(num => {
             const [y, x] = numToCoordinate(num);
-            console.log(y, x);
             const square = squareList[coordinateToNum(y, x)];
             square.setAttribute("bomb", true);
             square.value = "💣";
@@ -43,7 +42,6 @@
                     const neighborSquare = squareList[coordinateToNum(ny, nx)];
                     if (neighborSquare.getAttribute("bomb") === "true") continue;
                     neighborSquare.value++;
-                    console.log(neighborSquare);
                     neighborSquare.textContent = neighborSquare.value;
                 }
             }
@@ -57,7 +55,9 @@
             const y = Number(square.dataset.y);
             const x = Number(square.dataset.x);
             square.addEventListener("click", () => {
+                if (square.classList.contains("flag")) return;
                 open(y, x);
+                checkGameState(square);
             });
             square.addEventListener("contextmenu", (e) => {
                 e.preventDefault();
@@ -67,9 +67,18 @@
     }
 
     const open = (y, x) => {
+        if (!isValidCoordinate(y ,x)) return;
         const square = squareList[coordinateToNum(y, x)];
         if (!square.classList.contains("opened") && !square.classList.contains("flag")) {
             square.classList.add("opened");
+            if (square.value === 0) {
+                for (let i = -1; i <= 1; i++) {
+                    for (let j = -1; j <= 1; j++) {
+                        if (i === 0 && j === 0) continue;
+                        open(y + i, x + j);
+                    }
+                }
+            }
         }
     }
 
@@ -79,6 +88,19 @@
             square.classList.toggle("flag");
             square.textContent = square.classList.contains("flag") ? "🚩" : square.value;
         }
+    }
+
+    const checkGameState = (openedSquare) => {
+        if (openedSquare.getAttribute("bomb") === "true") {
+            squareList.forEach(square => {
+                square.classList.add("opened");
+                square.textContent = square.value;
+            });
+            alert("ゲームオーバー");
+            return;
+        }
+        const closedCount = 100 - squareList.filter(square => square.classList.contains("opened")).length;
+        if (closedCount <= 10) alert("クリア！");
     }
 
     const getRandomInt = (min, max) => {
@@ -93,6 +115,15 @@
 
     const coordinateToNum = (y, x) => {
         return y * 10 + x;
+    }
+
+    const isValidCoordinate = (y, x) => {
+        if (y < 0 || y >= 10 || x < 0 || x >= 10) {
+            console.log("だめだよ～");
+            return false
+        };
+        console.log("いいよ～");
+        return true;
     }
 
     setup();
